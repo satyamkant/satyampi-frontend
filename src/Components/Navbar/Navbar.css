@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
+
+.navbar {
+    background-color: #352F44;
+    font-family: "Itim", cursive;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.navbar-brand{
+    color: #DDE6ED;
+}
+
+.nav-link {
+    border-radius: 5px;
+    padding: 8px 12px; /* Add padding for a button-like effect */
+    color: #DDE6ED;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #B9B4C7;
+    text-decoration: none;
+    color: black; /* Optional: keep text color consistent on hover */
+    border-radius: 5px;
+}
+
+.nav-link.active {
+    font-weight: bold;
+}

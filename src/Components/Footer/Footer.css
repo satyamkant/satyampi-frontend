@@ -1,0 +1,18 @@
+#footer {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #352F44;
+    font-size: 14px;
+    text-align: center;
+    padding: 30px 0;
+    justify-content: center;
+    font-family: "Itim", cursive;
+    font-weight: 500;
+    color: #DDE6ED;
+}
+.containerFooter{
+    text-align: center;
+}
+.copyright{
+    text-align: center;
+}
