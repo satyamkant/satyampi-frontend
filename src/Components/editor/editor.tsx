@@ -1,17 +1,12 @@
 import './editor.css'
 
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
+
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
-import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
-import { $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
-import { $createLinkNode } from '@lexical/link';
-import { $createListItemNode, $createListNode } from '@lexical/list';
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 
-import PlaygroundNodes from './nodes/PlaygroundNodes';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
@@ -26,7 +21,6 @@ import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPl
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import ListMaxIndentLevelPlugin from './plugins/ListMaxIndentLevelPlugin';
 import YouTubePlugin from './plugins/YouTubePlugin';
-import TreeViewPlugin from './plugins/TreeViewPlugin';
 import DragDropPaste from './plugins/DragDropPastePlugin';
 
 import EmojisPlugin from './plugins/EmojisPlugin';
@@ -41,38 +35,15 @@ import TabFocusPlugin from './plugins/TabFocusPlugin';
 import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
 import { SetStateAction, useEffect, useState } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import parseEditorStateToHtml from './parseEditorStateToHtml';
-
-
-function OnChangePlugin({ onChange }: { onChange: (editorState: any, editor: any) => void }) {
-    const [editor] = useLexicalComposerContext();
-    useEffect(() => {
-        return editor.registerUpdateListener(({ editorState }) => {
-            onChange(editorState, editor);
-        });
-    }, [editor, onChange]);
-    return null;
-}
-
+import { $generateHtmlFromNodes } from '@lexical/html';
+import postProcessHtml from './PostProcessHtml';
+import TreeViewPlugin from './plugins/TreeViewPlugin';
 
 export default function Editor() {
     const placeholder = <Placeholder>{'Enter some rich text...'}</Placeholder>;
     const [editorState, setEditorState] = useState("null");
     const [html, setHtml] = useState("");
     const [blogTitle, setBlogTitle] = useState("");
-    const [editor] = useLexicalComposerContext();
-
-
-    const initialConfig = {
-        editorState: prepopulatedRichText,
-        namespace: "lexical-editor",
-        nodes: [...PlaygroundNodes],
-        theme: PlaygroundEditorTheme,
-        onError: (error: Error) => {
-            throw error;
-        },
-    }
-
     const cellEditorConfig = {
         namespace: 'Playground',
         nodes: [...TableCellNodes],
@@ -81,6 +52,21 @@ export default function Editor() {
         },
         theme: PlaygroundEditorTheme,
     };
+
+
+    function OnChangePlugin({ onChange }: { onChange: (editorState: any, editor: any) => void }) {
+        const [editor] = useLexicalComposerContext();
+        const editorState = editor.getEditorState();
+
+        useEffect(() => {
+            return editor.registerUpdateListener(({ editorState }) => {
+                onChange(editorState, editor);
+            });
+        }, [editor, onChange]);
+
+       
+        return null;
+    }
 
 
     function onChnageTitle(event: { target: { value: SetStateAction<string>; }; }) {
@@ -92,14 +78,25 @@ export default function Editor() {
             title: blogTitle,
             editorState: editorState,
         };
-        console.log(payload);
+        console.log(payload.editorState);
     }
 
     function onChange(current: { toJSON: () => any; }, editor: any) {
+        const editorState = editor.getEditorState();
         const editorStateJSON = current.toJSON();
+
         setEditorState(JSON.stringify(editorStateJSON));
-        parseEditorStateToHtml(editorStateJSON).then(r => setHtml(r));
+
+        let htmlString = '';
+        editorState.read(() => {
+            htmlString = $generateHtmlFromNodes(editor);
+        });
+
+        htmlString = postProcessHtml(htmlString);
+        setHtml(htmlString);
     }
+
+
 
 
 
@@ -166,9 +163,9 @@ export default function Editor() {
                         <YouTubePlugin />
                         <FloatingLinkEditorPlugin />
                         <AutoLinkPlugin />
-                        <OnChangePlugin onChange={onChange} />
                     </div>
                     {/* <TreeViewPlugin /> */}
+                    <OnChangePlugin onChange={onChange} />
                     <button type="button" className="btn btn-success my-2" onClick={onClick}>Submit</button>
                 </div>
             </div>
@@ -177,92 +174,10 @@ export default function Editor() {
                 <div className="card-body">
                     <div className="editor-container">
                         <h1 id="blog-title" className="card-title">{blogTitle}</h1>
-                        <div className="px-3 py-3" dangerouslySetInnerHTML={{ __html: html }} />
+                        <div className="px-3" dangerouslySetInnerHTML={{ __html: html }} />
                     </div>
                 </div>
             </div>
         </>
     )
-}
-
-
-
-function prepopulatedRichText() {
-    const root = $getRoot();
-    if (root.getFirstChild() === null) {
-        const heading = $createHeadingNode('h1');
-        heading.append($createTextNode('Welcome to the playground'));
-        root.append(heading);
-        const quote = $createQuoteNode();
-        quote.append(
-            $createTextNode(
-                `In case you were wondering what the black box at the bottom is – it's the debug view, showing the current state of the editor. ` +
-                `You can disable it by pressing on the settings control in the bottom-left of your screen and toggling the debug view setting.`,
-            ),
-        );
-        root.append(quote);
-        const paragraph = $createParagraphNode();
-        paragraph.append(
-            $createTextNode('The playground is a demo environment built with '),
-            $createTextNode('@lexical/react').toggleFormat('code'),
-            $createTextNode('.'),
-            $createTextNode(' Try typing in '),
-            $createTextNode('some text').toggleFormat('bold'),
-            $createTextNode(' with '),
-            $createTextNode('different').toggleFormat('italic'),
-            $createTextNode(' formats.'),
-        );
-        root.append(paragraph);
-        const paragraph2 = $createParagraphNode();
-        paragraph2.append(
-            $createTextNode(
-                'Make sure to check out the various plugins in the toolbar. You can also use #hashtags or @-mentions too!',
-            ),
-        );
-        root.append(paragraph2);
-        const paragraph3 = $createParagraphNode();
-        paragraph3.append(
-            $createTextNode(`If you'd like to find out more about Lexical, you can:`),
-        );
-        root.append(paragraph3);
-        const list = $createListNode('bullet');
-        list.append(
-            $createListItemNode().append(
-                $createTextNode(`Visit the `),
-                $createLinkNode('https://lexical.dev/').append(
-                    $createTextNode('Lexical website'),
-                ),
-                $createTextNode(` for documentation and more information.`),
-            ),
-            $createListItemNode().append(
-                $createTextNode(`Check out the code on our `),
-                $createLinkNode('https://github.com/facebook/lexical').append(
-                    $createTextNode('GitHub repository'),
-                ),
-                $createTextNode(`.`),
-            ),
-            $createListItemNode().append(
-                $createTextNode(`Playground code can be found `),
-                $createLinkNode(
-                    'https://github.com/facebook/lexical/tree/main/packages/lexical-playground',
-                ).append($createTextNode('here')),
-                $createTextNode(`.`),
-            ),
-            $createListItemNode().append(
-                $createTextNode(`Join our `),
-                $createLinkNode('https://discord.com/invite/KmG4wQnnD9').append(
-                    $createTextNode('Discord Server'),
-                ),
-                $createTextNode(` and chat with the team.`),
-            ),
-        );
-        root.append(list);
-        const paragraph4 = $createParagraphNode();
-        paragraph4.append(
-            $createTextNode(
-                `Lastly, we're constantly adding cool new features to this playground. So make sure you check back here when you next get a chance :).`,
-            ),
-        );
-        root.append(paragraph4);
-    }
 }

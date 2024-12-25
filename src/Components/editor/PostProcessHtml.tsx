@@ -40,6 +40,13 @@ function postProcessHtml(htmlString : string) {
         });
     });
 
+    doc.querySelectorAll('span').forEach(span => {
+        if (span.hasAttribute('data-lexical-excalidraw-json')) {
+            // Add the 'editor-image' class
+            span.classList.add('editor-image');
+        }
+    });
+
 
     // Serialize the modified DOM back to HTML
     return doc.body.innerHTML;
