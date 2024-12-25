@@ -141,19 +141,21 @@ export default function ExcalidrawModal({
     if (elements.filter((el) => !el.isDeleted).length > 0) {
       const appState = excaliDrawSceneRef?.current?.getAppState();
       // We only need a subset of the state
-      const partialState: Partial<AppState> = {
-        exportBackground: appState.exportBackground,
-        exportScale: appState.exportScale,
-        exportWithDarkMode: appState.theme === 'dark',
-        isBindingEnabled: appState.isBindingEnabled,
-        isLoading: appState.isLoading,
-        name: appState.name,
-        theme: appState.theme,
-        viewBackgroundColor: appState.viewBackgroundColor,
-        viewModeEnabled: appState.viewModeEnabled,
-        zenModeEnabled: appState.zenModeEnabled,
-        zoom: appState.zoom,
-      };
+      const partialState: Partial<AppState> = appState
+        ? {
+            exportBackground: appState.exportBackground,
+            exportScale: appState.exportScale,
+            exportWithDarkMode: appState.theme === 'dark',
+            isBindingEnabled: appState.isBindingEnabled,
+            isLoading: appState.isLoading,
+            name: appState.name,
+            theme: appState.theme,
+            viewBackgroundColor: appState.viewBackgroundColor,
+            viewModeEnabled: appState.viewModeEnabled,
+            zenModeEnabled: appState.zenModeEnabled,
+            zoom: appState.zoom,
+          }
+        : {};
       onSave(elements, partialState, files);
     } else {
       // delete node if the scene is clear
@@ -215,8 +217,7 @@ export default function ExcalidrawModal({
   // This is a hacky work-around for Excalidraw + Vite.
   // In DEV, Vite pulls this in fine, in prod it doesn't. It seems
   // like a module resolution issue with ESM vs CJS?
-  const _Excalidraw =
-    Excalidraw.$$typeof != null ? Excalidraw : Excalidraw.default;
+  const _Excalidraw = Excalidraw;
 
   return createPortal(
     <div className="ExcalidrawModal__overlay" role="dialog">

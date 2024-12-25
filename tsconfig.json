@@ -1,14 +1,20 @@
 {
    "compilerOptions": {
     "jsx": "react-jsx", // or "react" for React 17
-    "allowJs": false, // Disable .js/.jsx files if all are converted
-    "checkJs": false,
     "strict": true, // Recommended for TypeScript
     "noImplicitAny": true, // Enforce typing for better type safety
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "lib": ["ES2015", "DOM"],
-    "esModuleInterop": true
+    "lib": ["ES2019", "DOM"],
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "noEmitOnError": false,
+    "target": "es2015",
+    "module": "esnext"
   },
   "include": ["src"],
 }

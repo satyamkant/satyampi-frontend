@@ -18,21 +18,10 @@ import {OverflowNode} from '@lexical/overflow';
 import {HorizontalRuleNode} from '@lexical/react/LexicalHorizontalRuleNode';
 import {HeadingNode, QuoteNode} from '@lexical/rich-text';
 import {TableCellNode, TableNode, TableRowNode} from '@lexical/table';
-
-import {CollapsibleContainerNode} from '../plugins/CollapsiblePlugin/CollapsibleContainerNode';
-import {CollapsibleContentNode} from '../plugins/CollapsiblePlugin/CollapsibleContentNode';
-import {CollapsibleTitleNode} from '../plugins/CollapsiblePlugin/CollapsibleTitleNode';
-import {EmojiNode} from './EmojiNode';
 import {EquationNode} from './EquationNode';
 import {ExcalidrawNode} from './ExcalidrawNode';
-import {FigmaNode} from './FigmaNode';
-import {ImageNode} from './ImageNode';
 import {KeywordNode} from './KeywordNode';
-import {MentionNode} from './MentionNode';
-import {PollNode} from './PollNode';
-import {StickyNode} from './StickyNode';
 import {TableNode as NewTableNode} from './TableNode';
-import {TweetNode} from './TweetNode';
 import {YouTubeNode} from './YouTubeNode';
 
 const PlaygroundNodes: Array<Klass<LexicalNode>> = [
@@ -50,22 +39,12 @@ const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   AutoLinkNode,
   LinkNode,
   OverflowNode,
-  PollNode,
-  StickyNode,
-  ImageNode,
-  MentionNode,
-  EmojiNode,
   ExcalidrawNode,
   EquationNode,
   KeywordNode,
   HorizontalRuleNode,
-  TweetNode,
   YouTubeNode,
-  FigmaNode,
   MarkNode,
-  CollapsibleContainerNode,
-  CollapsibleContentNode,
-  CollapsibleTitleNode,
   CodeTabNode,
 ];
 

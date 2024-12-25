@@ -46,8 +46,6 @@ import {
   $isEquationNode,
   EquationNode,
 } from '../../nodes/EquationNode';
-import {$createImageNode, $isImageNode, ImageNode} from '../../nodes/ImageNode';
-import {$createTweetNode, $isTweetNode, TweetNode} from '../../nodes/TweetNode';
 import emojiList from '../../utils/emoji-list';
 
 export const HR: ElementTransformer = {
@@ -71,29 +69,29 @@ export const HR: ElementTransformer = {
   type: 'element',
 };
 
-export const IMAGE: TextMatchTransformer = {
-  dependencies: [ImageNode],
-  export: (node) => {
-    if (!$isImageNode(node)) {
-      return null;
-    }
+// export const IMAGE: TextMatchTransformer = {
+//   dependencies: [ImageNode],
+//   export: (node) => {
+//     if (!$isImageNode(node)) {
+//       return null;
+//     }
 
-    return `![${node.getAltText()}](${node.getSrc()})`;
-  },
-  importRegExp: /!(?:\[([^[]*)\])(?:\(([^(]+)\))/,
-  regExp: /!(?:\[([^[]*)\])(?:\(([^(]+)\))$/,
-  replace: (textNode, match) => {
-    const [, altText, src] = match;
-    const imageNode = $createImageNode({
-      altText,
-      maxWidth: 800,
-      src,
-    });
-    textNode.replace(imageNode);
-  },
-  trigger: ')',
-  type: 'text-match',
-};
+//     return `![${node.getAltText()}](${node.getSrc()})`;
+//   },
+//   importRegExp: /!(?:\[([^[]*)\])(?:\(([^(]+)\))/,
+//   regExp: /!(?:\[([^[]*)\])(?:\(([^(]+)\))$/,
+//   replace: (textNode, match) => {
+//     const [, altText, src] = match;
+//     const imageNode = $createImageNode({
+//       altText,
+//       maxWidth: 800,
+//       src,
+//     });
+//     textNode.replace(imageNode);
+//   },
+//   trigger: ')',
+//   type: 'text-match',
+// };
 
 export const EMOJI: TextMatchTransformer = {
   dependencies: [],
@@ -130,23 +128,23 @@ export const EQUATION: TextMatchTransformer = {
   type: 'text-match',
 };
 
-export const TWEET: ElementTransformer = {
-  dependencies: [TweetNode],
-  export: (node) => {
-    if (!$isTweetNode(node)) {
-      return null;
-    }
+// export const TWEET: ElementTransformer = {
+//   dependencies: [TweetNode],
+//   export: (node) => {
+//     if (!$isTweetNode(node)) {
+//       return null;
+//     }
 
-    return `<tweet id="${node.getId()}" />`;
-  },
-  regExp: /<tweet id="([^"]+?)"\s?\/>\s?$/,
-  replace: (textNode, _1, match) => {
-    const [, id] = match;
-    const tweetNode = $createTweetNode(id);
-    textNode.replace(tweetNode);
-  },
-  type: 'element',
-};
+//     return `<tweet id="${node.getId()}" />`;
+//   },
+//   regExp: /<tweet id="([^"]+?)"\s?\/>\s?$/,
+//   replace: (textNode, _1, match) => {
+//     const [, id] = match;
+//     const tweetNode = $createTweetNode(id);
+//     textNode.replace(tweetNode);
+//   },
+//   type: 'element',
+// };
 
 // Very primitive table setup
 const TABLE_ROW_REG_EXP = /^(?:\|)(.+)(?:\|)\s?$/;
@@ -307,10 +305,8 @@ const mapToTableCells = (textContent: string): Array<TableCellNode> | null => {
 export const PLAYGROUND_TRANSFORMERS: Array<Transformer> = [
   TABLE,
   HR,
-  IMAGE,
   EMOJI,
   EQUATION,
-  TWEET,
   CHECK_LIST,
   ...ELEMENT_TRANSFORMERS,
   ...TEXT_FORMAT_TRANSFORMERS,

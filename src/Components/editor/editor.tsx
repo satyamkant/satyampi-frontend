@@ -21,9 +21,7 @@ import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPl
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import ListMaxIndentLevelPlugin from './plugins/ListMaxIndentLevelPlugin';
 import YouTubePlugin from './plugins/YouTubePlugin';
-import DragDropPaste from './plugins/DragDropPastePlugin';
 
-import EmojisPlugin from './plugins/EmojisPlugin';
 import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin';
 import ComponentPickerPlugin from './plugins/ComponentPickerPlugin';
 import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin';
@@ -37,7 +35,6 @@ import { SetStateAction, useEffect, useState } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $generateHtmlFromNodes } from '@lexical/html';
 import postProcessHtml from './PostProcessHtml';
-import TreeViewPlugin from './plugins/TreeViewPlugin';
 
 export default function Editor() {
     const placeholder = <Placeholder>{'Enter some rich text...'}</Placeholder>;
@@ -143,11 +140,8 @@ export default function Editor() {
                             />
                             <HistoryPlugin />
                         </NewTablePlugin>
-
-                        <DragDropPaste />
                         <AutoEmbedPlugin />
                         <ComponentPickerPlugin />
-                        <EmojisPlugin />
                         <HashtagPlugin />
                         <ExcalidrawPlugin />
                         <EquationsPlugin />

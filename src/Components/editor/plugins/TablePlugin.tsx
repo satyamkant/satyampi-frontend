@@ -6,8 +6,8 @@
  *
  */
 
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {INSERT_TABLE_COMMAND} from '@lexical/table';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import {
   $insertNodes,
   COMMAND_PRIORITY_EDITOR,
@@ -18,13 +18,10 @@ import {
   LexicalEditor,
   LexicalNode,
 } from 'lexical';
-import {createContext, useContext, useEffect, useMemo, useState} from 'react';
-import * as React from 'react';
-import invariant from '../shared/src/invariant';
-
-import {$createTableNodeWithDimensions, TableNode} from '../nodes/TableNode';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { $createTableNodeWithDimensions, TableNode } from '../nodes/TableNode';
 import Button from '../ui/Button';
-import {DialogActions} from '../ui/Dialog';
+import { DialogActions } from '../ui/Dialog';
 import TextInput from '../ui/TextInput';
 
 export type InsertTableCommandPayload = Readonly<{
@@ -61,7 +58,7 @@ export const CellContext = createContext<CellContextShape>({
   },
 });
 
-export function TableContext({children}: {children: JSX.Element}) {
+export function TableContext({ children }: { children: JSX.Element }) {
   const [contextValue, setContextValue] = useState<{
     cellEditorConfig: null | CellEditorConfig;
     cellEditorPlugins: null | JSX.Element | Array<JSX.Element>;
@@ -76,7 +73,7 @@ export function TableContext({children}: {children: JSX.Element}) {
           cellEditorConfig: contextValue.cellEditorConfig,
           cellEditorPlugins: contextValue.cellEditorPlugins,
           set: (cellEditorConfig, cellEditorPlugins) => {
-            setContextValue({cellEditorConfig, cellEditorPlugins});
+            setContextValue({ cellEditorConfig, cellEditorPlugins });
           },
         }),
         [contextValue.cellEditorConfig, contextValue.cellEditorPlugins],
@@ -165,7 +162,7 @@ export function InsertNewTableDialog({
   }, [rows, columns]);
 
   const onClick = () => {
-    activeEditor.dispatchCommand(INSERT_NEW_TABLE_COMMAND, {columns, rows});
+    activeEditor.dispatchCommand(INSERT_NEW_TABLE_COMMAND, { columns, rows });
     onClose();
   };
 
@@ -207,15 +204,12 @@ export function TablePlugin({
   const cellContext = useContext(CellContext);
 
   useEffect(() => {
-    if (!editor.hasNodes([TableNode])) {
-      invariant(false, 'TablePlugin: TableNode is not registered on editor');
-    }
 
     cellContext.set(cellEditorConfig, children);
 
     return editor.registerCommand<InsertTableCommandPayload>(
       INSERT_NEW_TABLE_COMMAND,
-      ({columns, rows, includeHeaders}) => {
+      ({ columns, rows, includeHeaders }) => {
         const tableNode = $createTableNodeWithDimensions(
           Number(rows),
           Number(columns),

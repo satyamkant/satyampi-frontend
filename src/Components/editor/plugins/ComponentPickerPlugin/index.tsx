@@ -6,23 +6,23 @@
  *
  */
 
-import {$createCodeNode} from '@lexical/code';
+import { $createCodeNode } from '@lexical/code';
 import {
   INSERT_CHECK_LIST_COMMAND,
   INSERT_ORDERED_LIST_COMMAND,
   INSERT_UNORDERED_LIST_COMMAND,
 } from '@lexical/list';
-import {INSERT_EMBED_COMMAND} from '@lexical/react/LexicalAutoEmbedPlugin';
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {INSERT_HORIZONTAL_RULE_COMMAND} from '@lexical/react/LexicalHorizontalRuleNode';
+import { INSERT_EMBED_COMMAND } from '@lexical/react/LexicalAutoEmbedPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { INSERT_HORIZONTAL_RULE_COMMAND } from '@lexical/react/LexicalHorizontalRuleNode';
 import {
   LexicalTypeaheadMenuPlugin,
   MenuOption,
   useBasicTypeaheadTriggerMatch,
 } from '@lexical/react/LexicalTypeaheadMenuPlugin';
-import {$createHeadingNode, $createQuoteNode} from '@lexical/rich-text';
-import {$setBlocksType} from '@lexical/selection';
-import {INSERT_TABLE_COMMAND} from '@lexical/table';
+import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
+import { $setBlocksType } from '@lexical/selection';
+import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import {
   $createParagraphNode,
   $getSelection,
@@ -30,19 +30,16 @@ import {
   FORMAT_ELEMENT_COMMAND,
   TextNode,
 } from 'lexical';
-import {useCallback, useMemo, useState} from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import useModal from '../../hooks/useModal';
 import catTypingGif from '../../images/cat-typing.gif';
-import {EmbedConfigs} from '../AutoEmbedPlugin';
-import {INSERT_COLLAPSIBLE_COMMAND} from '../CollapsiblePlugin';
-import {InsertEquationDialog} from '../EquationsPlugin';
-import {INSERT_EXCALIDRAW_COMMAND} from '../ExcalidrawPlugin';
-import {INSERT_IMAGE_COMMAND, InsertImageDialog} from '../ImagesPlugin';
-import {InsertPollDialog} from '../PollPlugin';
-import {InsertNewTableDialog, InsertTableDialog} from '../TablePlugin';
+import { EmbedConfigs } from '../AutoEmbedPlugin';
+import { InsertEquationDialog } from '../EquationsPlugin';
+import { INSERT_EXCALIDRAW_COMMAND } from '../ExcalidrawPlugin';
+import { InsertNewTableDialog, InsertTableDialog } from '../TablePlugin';
 
 class ComponentPickerOption extends MenuOption {
   // What shows up in the editor
@@ -141,21 +138,21 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
           keywords: ['table'],
           onSelect: () =>
             // @ts-ignore Correct types, but since they're dynamic TS doesn't like it.
-            editor.dispatchCommand(INSERT_TABLE_COMMAND, {columns, rows}),
+            editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
         }),
       );
     } else if (partialTableMatch) {
       const rows = parseInt(partialTableMatch[0], 10);
 
       options.push(
-        ...Array.from({length: 5}, (_, i) => i + 1).map(
+        ...Array.from({ length: 5 }, (_, i) => i + 1).map(
           (columns) =>
             new ComponentPickerOption(`${rows}x${columns} Table`, {
               icon: <i className="icon table" />,
               keywords: ['table'],
               onSelect: () =>
                 // @ts-ignore Correct types, but since they're dynamic TS doesn't like it.
-                editor.dispatchCommand(INSERT_TABLE_COMMAND, {columns, rows}),
+                editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
             }),
         ),
       );
@@ -177,7 +174,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
             }
           }),
       }),
-      ...Array.from({length: 3}, (_, i) => i + 1).map(
+      ...Array.from({ length: 3 }, (_, i) => i + 1).map(
         (n) =>
           new ComponentPickerOption(`Heading ${n}`, {
             icon: <i className={`icon h${n}`} />,
@@ -271,14 +268,14 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
         onSelect: () =>
           editor.dispatchCommand(INSERT_EXCALIDRAW_COMMAND, undefined),
       }),
-      new ComponentPickerOption('Poll', {
-        icon: <i className="icon poll" />,
-        keywords: ['poll', 'vote'],
-        onSelect: () =>
-          showModal('Insert Poll', (onClose) => (
-            <InsertPollDialog activeEditor={editor} onClose={onClose} />
-          )),
-      }),
+      // new ComponentPickerOption('Poll', {
+      //   icon: <i className="icon poll" />,
+      //   keywords: ['poll', 'vote'],
+      //   onSelect: () =>
+      //     showModal('Insert Poll', (onClose) => (
+      //       <InsertPollDialog activeEditor={editor} onClose={onClose} />
+      //     )),
+      // }),
       ...EmbedConfigs.map(
         (embedConfig) =>
           new ComponentPickerOption(`Embed ${embedConfig.contentName}`, {
@@ -296,29 +293,29 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
             <InsertEquationDialog activeEditor={editor} onClose={onClose} />
           )),
       }),
-      new ComponentPickerOption('GIF', {
-        icon: <i className="icon gif" />,
-        keywords: ['gif', 'animate', 'image', 'file'],
-        onSelect: () =>
-          editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-            altText: 'Cat typing on a laptop',
-            src: catTypingGif,
-          }),
-      }),
-      new ComponentPickerOption('Image', {
-        icon: <i className="icon image" />,
-        keywords: ['image', 'photo', 'picture', 'file'],
-        onSelect: () =>
-          showModal('Insert Image', (onClose) => (
-            <InsertImageDialog activeEditor={editor} onClose={onClose} />
-          )),
-      }),
-      new ComponentPickerOption('Collapsible', {
-        icon: <i className="icon caret-right" />,
-        keywords: ['collapse', 'collapsible', 'toggle'],
-        onSelect: () =>
-          editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined),
-      }),
+      // new ComponentPickerOption('GIF', {
+      //   icon: <i className="icon gif" />,
+      //   keywords: ['gif', 'animate', 'image', 'file'],
+      //   onSelect: () =>
+      //     editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
+      //       altText: 'Cat typing on a laptop',
+      //       src: catTypingGif,
+      //     }),
+      // }),
+      // new ComponentPickerOption('Image', {
+      //   icon: <i className="icon image" />,
+      //   keywords: ['image', 'photo', 'picture', 'file'],
+      //   onSelect: () =>
+      //     showModal('Insert Image', (onClose) => (
+      //       <InsertImageDialog activeEditor={editor} onClose={onClose} />
+      //     )),
+      // }),
+      // new ComponentPickerOption('Collapsible', {
+      //   icon: <i className="icon caret-right" />,
+      //   keywords: ['collapse', 'collapsible', 'toggle'],
+      //   onSelect: () =>
+      //     editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined),
+      // }),
       ...['left', 'center', 'right', 'justify'].map(
         (alignment) =>
           new ComponentPickerOption(`Align ${alignment}`, {
@@ -335,16 +332,16 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
 
     return queryString
       ? [
-          ...dynamicOptions,
-          ...baseOptions.filter((option) => {
-            return new RegExp(queryString, 'gi').exec(option.title) ||
-              option.keywords != null
-              ? option.keywords.some((keyword) =>
-                  new RegExp(queryString, 'gi').exec(keyword),
-                )
-              : false;
-          }),
-        ]
+        ...dynamicOptions,
+        ...baseOptions.filter((option) => {
+          return new RegExp(queryString, 'gi').exec(option.title) ||
+            option.keywords != null
+            ? option.keywords.some((keyword) =>
+              new RegExp(queryString, 'gi').exec(keyword),
+            )
+            : false;
+        }),
+      ]
       : baseOptions;
   }, [editor, getDynamicOptions, queryString, showModal]);
 
@@ -376,31 +373,31 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
         options={options}
         menuRenderFn={(
           anchorElementRef,
-          {selectedIndex, selectOptionAndCleanUp, setHighlightedIndex},
+          { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex },
         ) =>
           anchorElementRef.current && options.length
             ? ReactDOM.createPortal(
-                <div className="typeahead-popover component-picker-menu">
-                  <ul>
-                    {options.map((option, i: number) => (
-                      <ComponentPickerMenuItem
-                        index={i}
-                        isSelected={selectedIndex === i}
-                        onClick={() => {
-                          setHighlightedIndex(i);
-                          selectOptionAndCleanUp(option);
-                        }}
-                        onMouseEnter={() => {
-                          setHighlightedIndex(i);
-                        }}
-                        key={option.key}
-                        option={option}
-                      />
-                    ))}
-                  </ul>
-                </div>,
-                anchorElementRef.current,
-              )
+              <div className="typeahead-popover component-picker-menu">
+                <ul>
+                  {options.map((option, i: number) => (
+                    <ComponentPickerMenuItem
+                      index={i}
+                      isSelected={selectedIndex === i}
+                      onClick={() => {
+                        setHighlightedIndex(i);
+                        selectOptionAndCleanUp(option);
+                      }}
+                      onMouseEnter={() => {
+                        setHighlightedIndex(i);
+                      }}
+                      key={option.key}
+                      option={option}
+                    />
+                  ))}
+                </ul>
+              </div>,
+              anchorElementRef.current,
+            )
             : null
         }
       />

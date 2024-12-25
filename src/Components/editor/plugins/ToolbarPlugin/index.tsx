@@ -6,7 +6,7 @@
  *
  */
 
-import type { LexicalEditor, NodeKey } from 'lexical';
+import type { LexicalEditor, NodeKey, TextNode } from 'lexical';
 
 import {
   $createCodeNode,
@@ -70,25 +70,14 @@ import {
   UNDO_COMMAND,
 } from 'lexical';
 import { useCallback, useEffect, useState } from 'react';
-
-import { IS_APPLE } from '../../shared/src/environment';
-
 import useModal from '../../hooks/useModal';
-import { $createStickyNode } from '../../nodes/StickyNode';
 import DropDown, { DropDownItem } from '../../ui/DropDown';
 import DropdownColorPicker from '../../ui/DropdownColorPicker';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import { sanitizeUrl } from '../../utils/url';
 import { EmbedConfigs } from '../AutoEmbedPlugin';
-import { INSERT_COLLAPSIBLE_COMMAND } from '../CollapsiblePlugin';
 import { InsertEquationDialog } from '../EquationsPlugin';
 import { INSERT_EXCALIDRAW_COMMAND } from '../ExcalidrawPlugin';
-import {
-  INSERT_IMAGE_COMMAND,
-  InsertImageDialog,
-  InsertImagePayload,
-} from '../ImagesPlugin';
-import { InsertPollDialog } from '../PollPlugin';
 import { InsertNewTableDialog, InsertTableDialog } from '../TablePlugin';
 
 const blockTypeToBlockName = {
@@ -587,13 +576,13 @@ export default function ToolbarPlugin(): JSX.Element {
 
             }
             if (idx === nodes.length - 1) {
-              node = node.splitText(focus.offset)[0] || node;
+              node = (node as TextNode).splitText(focus.offset)[0] || node;
             }
 
-            if (node.__style !== '') {
+            if (($isTextNode(node) && node.__style !== '')) {
               node.setStyle('');
             }
-            if (node.__format !== 0) {
+            if (($isTextNode(node) && (node as TextNode).__format !== 0)) {
               node.setFormat(0);
               $getNearestBlockElementAncestorOrThrow(node).setFormat('');
             }
@@ -642,9 +631,9 @@ export default function ToolbarPlugin(): JSX.Element {
     },
     [activeEditor, selectedElementKey],
   );
-  const insertGifOnClick = (payload: InsertImagePayload) => {
-    activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
-  };
+  // const insertGifOnClick = (payload: InsertImagePayload) => {
+  //   activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
+  // };
 
   return (
     <div className="toolbar">
@@ -653,7 +642,7 @@ export default function ToolbarPlugin(): JSX.Element {
         onClick={() => {
           activeEditor.dispatchCommand(UNDO_COMMAND, undefined);
         }}
-        title={IS_APPLE ? 'Undo (⌘Z)' : 'Undo (Ctrl+Z)'}
+        title={true ? 'Undo (⌘Z)' : 'Undo (Ctrl+Z)'}
         type="button"
         className="toolbar-item spaced"
         aria-label="Undo">
@@ -664,7 +653,7 @@ export default function ToolbarPlugin(): JSX.Element {
         onClick={() => {
           activeEditor.dispatchCommand(REDO_COMMAND, undefined);
         }}
-        title={IS_APPLE ? 'Redo (⌘Y)' : 'Redo (Ctrl+Y)'}
+        title={true ? 'Redo (⌘Y)' : 'Redo (Ctrl+Y)'}
         type="button"
         className="toolbar-item"
         aria-label="Redo">
@@ -722,9 +711,9 @@ export default function ToolbarPlugin(): JSX.Element {
               activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
             }}
             className={'toolbar-item spaced ' + (isBold ? 'active' : '')}
-            title={IS_APPLE ? 'Bold (⌘B)' : 'Bold (Ctrl+B)'}
+            title={true ? 'Bold (⌘B)' : 'Bold (Ctrl+B)'}
             type="button"
-            aria-label={`Format text as bold. Shortcut: ${IS_APPLE ? '⌘B' : 'Ctrl+B'
+            aria-label={`Format text as bold. Shortcut: ${true ? '⌘B' : 'Ctrl+B'
               }`}>
             <i className="format bold" />
           </button>
@@ -734,9 +723,9 @@ export default function ToolbarPlugin(): JSX.Element {
               activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
             }}
             className={'toolbar-item spaced ' + (isItalic ? 'active' : '')}
-            title={IS_APPLE ? 'Italic (⌘I)' : 'Italic (Ctrl+I)'}
+            title={true ? 'Italic (⌘I)' : 'Italic (Ctrl+I)'}
             type="button"
-            aria-label={`Format text as italics. Shortcut: ${IS_APPLE ? '⌘I' : 'Ctrl+I'
+            aria-label={`Format text as italics. Shortcut: ${true ? '⌘I' : 'Ctrl+I'
               }`}>
             <i className="format italic" />
           </button>
@@ -746,9 +735,9 @@ export default function ToolbarPlugin(): JSX.Element {
               activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
             }}
             className={'toolbar-item spaced ' + (isUnderline ? 'active' : '')}
-            title={IS_APPLE ? 'Underline (⌘U)' : 'Underline (Ctrl+U)'}
+            title={true ? 'Underline (⌘U)' : 'Underline (Ctrl+U)'}
             type="button"
-            aria-label={`Format text to underlined. Shortcut: ${IS_APPLE ? '⌘U' : 'Ctrl+U'
+            aria-label={`Format text to underlined. Shortcut: ${true ? '⌘U' : 'Ctrl+U'
               }`}>
             <i className="format underline" />
           </button>

@@ -13,12 +13,9 @@ import {HashtagNode} from '@lexical/hashtag';
 import {AutoLinkNode, LinkNode} from '@lexical/link';
 import {ListItemNode, ListNode} from '@lexical/list';
 import {HeadingNode, QuoteNode} from '@lexical/rich-text';
-import {EmojiNode} from './EmojiNode';
 import {EquationNode} from './EquationNode';
 import {ExcalidrawNode} from './ExcalidrawNode';
-import {ImageNode} from './ImageNode';
 import {KeywordNode} from './KeywordNode';
-import {MentionNode} from './MentionNode';
 
 const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   HeadingNode,
@@ -30,9 +27,6 @@ const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   CodeHighlightNode,
   AutoLinkNode,
   LinkNode,
-  ImageNode,
-  MentionNode,
-  EmojiNode,
   ExcalidrawNode,
   EquationNode,
   KeywordNode,
