@@ -1,3 +1,5 @@
+
+import MyEditor from "../editor/wrapper";
 import "./UserDashboard.scss"
 import {useEffect, useState} from "react";
 
@@ -18,7 +20,7 @@ function UserDashboard(){
                 break;
             case "publish-blog":
                 setActiveTab("publish-blog");
-                // setDashboardData( <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4"><MyEditor/></main>)
+                setDashboardData(<main className="col-md-9 ms-sm-auto col-lg-10 px-md-4"><MyEditor /></main>)
         }
     }
 
