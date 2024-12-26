@@ -1,4 +1,4 @@
-function postProcessHtml(htmlString : string) {
+function postProcessHtml(htmlString: string) {
     // Use DOMParser to parse the HTML string
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, "text/html");
@@ -18,7 +18,7 @@ function postProcessHtml(htmlString : string) {
         const brCount = (codeContent.match(/<br\s*\/?>/g) || []).length;
 
         let gutterCount = '';
-        for (let i = 1; i <= brCount+1; i++) {
+        for (let i = 1; i <= brCount + 1; i++) {
             gutterCount += i + '\n';
         }
 
@@ -40,12 +40,12 @@ function postProcessHtml(htmlString : string) {
         });
     });
 
-    doc.querySelectorAll('span').forEach(span => {
-        if (span.hasAttribute('data-lexical-excalidraw-json')) {
-            // Add the 'editor-image' class
-            span.classList.add('editor-image');
-        }
-    });
+    // doc.querySelectorAll('span').forEach(span => {
+    //     if (span.hasAttribute('data-lexical-excalidraw-json')) {
+    //         // Add the 'editor-image' class
+    //         span.classList.add('editor-image');
+    //     }
+    // });
 
 
     // Serialize the modified DOM back to HTML

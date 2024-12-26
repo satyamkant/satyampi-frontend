@@ -53,7 +53,6 @@ export default function Editor() {
 
     function OnChangePlugin({ onChange }: { onChange: (editorState: any, editor: any) => void }) {
         const [editor] = useLexicalComposerContext();
-        const editorState = editor.getEditorState();
 
         useEffect(() => {
             return editor.registerUpdateListener(({ editorState }) => {
@@ -61,7 +60,7 @@ export default function Editor() {
             });
         }, [editor, onChange]);
 
-       
+
         return null;
     }
 
@@ -109,7 +108,7 @@ export default function Editor() {
                     </div>
 
                     <ToolbarPlugin />
-                    <div className="editor-container tree-view">
+                    <div className="editor-container">
                         <RichTextPlugin
                             contentEditable={
                                 <div className="editor-scroller">
@@ -168,7 +167,7 @@ export default function Editor() {
                 <div className="card-body">
                     <div className="editor-container">
                         <h1 id="blog-title" className="card-title">{blogTitle}</h1>
-                        <div className="px-3" dangerouslySetInnerHTML={{ __html: html }} />
+                        <div className="px-3 py-3" dangerouslySetInnerHTML={{ __html: html }} />
                     </div>
                 </div>
             </div>

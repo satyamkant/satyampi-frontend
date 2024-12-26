@@ -4,25 +4,11 @@ import "./Navbar.css"
 import Login from "../Login/Login";
 import {useState} from "react";
 import AuthService from "../Controller/AuthService";
-
-interface NavbarProps {
-    isAuthenticated: boolean;
-    name: string;
-    onAutheChange: () => void;
-}
+import '../../DAO/schema'
 
 function Navbar({isAuthenticated, name, onAutheChange}: NavbarProps){
 
     const [userName, setUserName] = useState(name);
-
-    interface LoginResponse {
-        status: number;
-        data: {
-            userDto: {
-                name: string;
-            };
-        };
-    }
 
     const handleLoginSuccess = (response: LoginResponse) => {
         if(response.status === 200){

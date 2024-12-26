@@ -12,6 +12,7 @@ import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 
 
 import Editor from "./editor";
+import { TableContext } from './plugins/TablePlugin';
 
 export default function MyEditor() {
     const initialConfig = {
@@ -27,7 +28,9 @@ export default function MyEditor() {
     return (
         <div className="editor-shell">
             <LexicalComposer initialConfig={initialConfig}>
-                <Editor />
+                <TableContext>
+                    <Editor />
+                </TableContext>
             </LexicalComposer>
         </div>
     )
