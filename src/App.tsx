@@ -18,23 +18,24 @@ function App() {
   const toggleIsAuthenticated = () => {
     setIsAuthenticated(!isAuthenticated);
   }
+  const checkAuthenticated = async () => {
+    try {
+      const response = await AuthService.IsAuthenticatedService();
+      if (response.message === "Authenticated user") {
+        setIsAuthenticated(true);
+        setName(response.data.name);
+      } else {
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const checkAuthenticated = async () => {
-      try {
-        const response = await AuthService.IsAuthenticatedService();
-        if (response.message === "Authenticated user") {
-          setIsAuthenticated(true);
-          setName(response.userDto.name);
-        } else {
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    
     checkAuthenticated()
   }, [])
 
@@ -49,7 +50,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/blog" element={<BlogHome />} />
+          <Route path="/blog/:navLinkName" element={<BlogHome />} />
           <Route
             path="/:usernameId/dashboard"
             element={isAuthenticated ? <UserDashboard /> : <Navigate to="/home" />}

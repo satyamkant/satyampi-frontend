@@ -1,6 +1,7 @@
 import AuthService from "../Controller/AuthService";
 import { useState } from "react";
 import '../../DAO/schema'
+import { LoginResponse } from "../../DAO/schema";
 
 
 interface LoginProps {
@@ -18,7 +19,6 @@ function Login({ onLoginSuccess }: LoginProps) {
 
         onLoginSuccess(response);
         if (response.status === 200) {
-            // Programmatically trigger the "Close" button click
             const closeButton = document.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
             if (closeButton) {
                 closeButton.click();

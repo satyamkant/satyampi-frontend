@@ -1,6 +1,4 @@
-
-
-interface LoginResponse {
+export interface LoginResponse {
     status: number;
     data: {
         userDto: {
@@ -9,7 +7,7 @@ interface LoginResponse {
     };
 }
 
-interface NavbarProps {
+export interface NavbarProps {
     isAuthenticated: boolean;
     name: string;
     onAutheChange: () => void;

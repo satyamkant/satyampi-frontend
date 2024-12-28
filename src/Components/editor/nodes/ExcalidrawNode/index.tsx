@@ -20,7 +20,7 @@ import type {
 
 import { DecoratorNode } from 'lexical';
 import * as React from 'react';
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react';
 
 type Dimension = number | 'inherit';
 
@@ -136,7 +136,6 @@ export class ExcalidrawNode extends DecoratorNode<JSX.Element> {
     const element = document.createElement('span');
 
     element.style.display = 'inline-block';
-
     const content = editor.getElementByKey(this.getKey());
     if (content !== null) {
       const svg = content.querySelector('svg');

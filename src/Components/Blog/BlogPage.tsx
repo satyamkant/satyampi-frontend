@@ -1,10 +1,37 @@
+import { useParams } from "react-router-dom";
+import AuthService from "../Controller/AuthService";
 import "./css/BlogPage.scss"
+import { useEffect, useState } from "react";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
+import { renderEditorStateToHtml } from "../utils/EditorStateToHtml";
+
 
 function BlogPage() {
+
+    const { navLinkName } = useParams<{ navLinkName: string }>();
+    const [loading, setLoading] = useState(true);
+    const [blog, setBlog] = useState(<p>"No content found"</p>);
+
+    const blogData = async () => {
+        try {
+            const response = await AuthService.GetBlogByTitle("Welcome World !");
+            setBlog(<div dangerouslySetInnerHTML={{ __html: renderEditorStateToHtml(response.data.content) }} />);
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        blogData();
+    }, [])
+
     return (
         <main className="blog-page container">
 
-            <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+            {/* <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
                 <div className="col-lg-6 px-0">
                     <h1 className="display-4 fst-italic">Development in Progress</h1>
                     <p className="lead my-3">This project is still in development.</p>
@@ -68,15 +95,21 @@ function BlogPage() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
-            <div className="row g-5">
+            <div className="row g-5 py-5">
                 <div className="col-md-8">
-                    <h3 className="pb-4 mb-4 fst-italic border-bottom">
-                        From the Firehose
-                    </h3>
+                    {loading ? (<LoadingScreen />) : (<div>
+                        <h3 className="pb-4 mb-4 border-bottom">
+                            Straight from RaspberryPi !!! 😎
+                        </h3>
+                        <article className="blog-post:">{blog}</article>
+                    </div>)}
 
-                    <article className="blog-post">
+
+
+
+                    {/* <article className="blog-post">
                         <h2 className="display-5 link-body-emphasis mb-1">Sample blog post</h2>
                         <p className="blog-post-meta">January 1, 2021 by <a href="#">Mark</a></p>
 
@@ -243,12 +276,12 @@ function BlogPage() {
                     <nav className="blog-pagination" aria-label="Pagination">
                         <a className="btn btn-outline-primary rounded-pill" href="#">Older</a>
                         <a className="btn btn-outline-secondary rounded-pill disabled" aria-disabled="true">Newer</a>
-                    </nav>
+                    </nav> */}
 
                 </div>
 
                 <div className="col-md-4">
-                    <div className="position-sticky" style={{"top": "2rem"}}>
+                    <div className="position-sticky" style={{ "top": "2rem" }}>
                         <div className="p-4 mb-3 bg-body-tertiary rounded">
                             <h4 className="fst-italic">About</h4>
                             <p className="mb-0">Customize this section to tell your visitors a little bit about your
@@ -260,10 +293,10 @@ function BlogPage() {
                             <ul className="list-unstyled">
                                 <li>
                                     <a className="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
-                                       href="#">
+                                        href="#">
                                         <svg className="bd-placeholder-img" width="100%" height="96"
-                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-                                             preserveAspectRatio="xMidYMid slice" focusable="false">
+                                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                            preserveAspectRatio="xMidYMid slice" focusable="false">
                                             <rect width="100%" height="100%" fill="#777"></rect>
                                         </svg>
                                         <div className="col-lg-8">
@@ -274,10 +307,10 @@ function BlogPage() {
                                 </li>
                                 <li>
                                     <a className="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
-                                       href="#">
+                                        href="#">
                                         <svg className="bd-placeholder-img" width="100%" height="96"
-                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-                                             preserveAspectRatio="xMidYMid slice" focusable="false">
+                                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                            preserveAspectRatio="xMidYMid slice" focusable="false">
                                             <rect width="100%" height="100%" fill="#777"></rect>
                                         </svg>
                                         <div className="col-lg-8">
@@ -288,10 +321,10 @@ function BlogPage() {
                                 </li>
                                 <li>
                                     <a className="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
-                                       href="#">
+                                        href="#">
                                         <svg className="bd-placeholder-img" width="100%" height="96"
-                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-                                             preserveAspectRatio="xMidYMid slice" focusable="false">
+                                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                            preserveAspectRatio="xMidYMid slice" focusable="false">
                                             <rect width="100%" height="100%" fill="#777"></rect>
                                         </svg>
                                         <div className="col-lg-8">

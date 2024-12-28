@@ -34,9 +34,16 @@ import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin
 import { SetStateAction, useEffect, useState } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $generateHtmlFromNodes } from '@lexical/html';
-import postProcessHtml from './PostProcessHtml';
+import AuthService from '../Controller/AuthService';
+import { renderEditorStateToHtml } from '../utils/EditorStateToHtml';
+import data from '../../DAO/editorData.json'
+import postProcessHtml from '../utils/PostProcessHtml';
 
 export default function Editor() {
+    const [editor] = useLexicalComposerContext();
+
+
+
     const placeholder = <Placeholder>{'Enter some rich text...'}</Placeholder>;
     const [editorState, setEditorState] = useState("null");
     const [html, setHtml] = useState("");
@@ -50,10 +57,7 @@ export default function Editor() {
         theme: PlaygroundEditorTheme,
     };
 
-
     function OnChangePlugin({ onChange }: { onChange: (editorState: any, editor: any) => void }) {
-        const [editor] = useLexicalComposerContext();
-
         useEffect(() => {
             return editor.registerUpdateListener(({ editorState }) => {
                 onChange(editorState, editor);
@@ -69,13 +73,13 @@ export default function Editor() {
         setBlogTitle(event.target.value);
     }
 
-    function onClick() {
-        const payload = {
-            title: blogTitle,
-            editorState: editorState,
-        };
-        console.log(payload.editorState);
-    }
+    const handleSubmit = async (event: React.FormEvent<HTMLButtonElement>): Promise<void> => {
+        event.preventDefault();
+
+        const response = await AuthService.SubmitBlogService(blogTitle, editorState);
+
+    };
+
 
     function onChange(current: { toJSON: () => any; }, editor: any) {
         const editorState = editor.getEditorState();
@@ -83,18 +87,15 @@ export default function Editor() {
 
         setEditorState(JSON.stringify(editorStateJSON));
 
-        let htmlString = '';
+        // let htmlString = renderEditorStateToHtml(editor.getEditorState().toJSON());
+        let htmlString = "";
+
         editorState.read(() => {
             htmlString = $generateHtmlFromNodes(editor);
-        });
-
-        htmlString = postProcessHtml(htmlString);
+        })
+        htmlString = postProcessHtml(htmlString, false)
         setHtml(htmlString);
     }
-
-
-
-
 
     return (
         <>
@@ -159,7 +160,7 @@ export default function Editor() {
                     </div>
                     {/* <TreeViewPlugin /> */}
                     <OnChangePlugin onChange={onChange} />
-                    <button type="button" className="btn btn-success my-2" onClick={onClick}>Submit</button>
+                    <button type="button" className="btn btn-success my-2" onClick={handleSubmit}>Submit</button>
                 </div>
             </div>
             <div className="card">
