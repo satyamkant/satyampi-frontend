@@ -1,7 +1,8 @@
 import { exportToSvg } from "@excalidraw/excalidraw";
 
-async function postProcessHtml (htmlString: string, processSvg: boolean) {
+async function postProcessHtml(htmlString: string, processSvg: boolean) {
     // Use DOMParser to parse the HTML string
+    console.log(processSvg);
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, "text/html");
 
@@ -69,7 +70,7 @@ async function postProcessHtml (htmlString: string, processSvg: boolean) {
                 try {
                     // Parse the Excalidraw JSON data
                     const excalidrawState = JSON.parse(excalidrawData);
-                
+
                     const { elements, appState, files } = excalidrawState;
 
 
@@ -79,7 +80,7 @@ async function postProcessHtml (htmlString: string, processSvg: boolean) {
                         files,
                     });
                     removeStyleFromSvg_HACK(svg);
-        
+
                     svg.setAttribute('width', '100%');
                     svg.setAttribute('height', '100%');
                     svg.setAttribute('display', 'block');
