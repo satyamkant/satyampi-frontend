@@ -35,8 +35,6 @@ import { SetStateAction, useEffect, useState } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $generateHtmlFromNodes } from '@lexical/html';
 import AuthService from '../Controller/AuthService';
-import { renderEditorStateToHtml } from '../utils/EditorStateToHtml';
-import data from '../../DAO/editorData.json'
 import postProcessHtml from '../utils/PostProcessHtml';
 
 export default function Editor() {
@@ -93,7 +91,9 @@ export default function Editor() {
         editorState.read(() => {
             htmlString = $generateHtmlFromNodes(editor);
         })
-        htmlString = postProcessHtml(htmlString, false)
+        postProcessHtml(htmlString, false).then((processedHtml) => {
+            setHtml(processedHtml);
+        });
         setHtml(htmlString);
     }
 
