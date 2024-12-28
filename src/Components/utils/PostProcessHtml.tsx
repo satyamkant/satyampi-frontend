@@ -45,6 +45,8 @@ async function postProcessHtml(htmlString: string, processSvg: boolean) {
 
     if (processSvg) {
         // Select all <span> elements with the `data-lexical-excalidraw-json` attribute
+        console.log("inside process SVG")
+
         document.querySelectorAll(
             'span[data-lexical-excalidraw-json]'
         ).forEach(async (span) => {
@@ -69,6 +71,7 @@ async function postProcessHtml(htmlString: string, processSvg: boolean) {
             if (excalidrawData) {
                 try {
                     // Parse the Excalidraw JSON data
+                    console.log("inside excalidraw data parsing")
                     const excalidrawState = JSON.parse(excalidrawData);
 
                     const { elements, appState, files } = excalidrawState;
