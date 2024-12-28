@@ -2,7 +2,6 @@ import { exportToSvg } from "@excalidraw/excalidraw";
 
 async function postProcessHtml(htmlString: string, processSvg: boolean) {
     // Use DOMParser to parse the HTML string
-    console.log(processSvg);
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, "text/html");
 
@@ -86,8 +85,6 @@ async function postProcessHtml(htmlString: string, processSvg: boolean) {
 
                         span.appendChild(svg);
                         span.removeAttribute("data-lexical-excalidraw-json");
-
-                        console.log("SVG appended:", svg);
                     } catch (error) {
                         console.error("Error processing Excalidraw JSON:", error);
                     }
