@@ -15,13 +15,19 @@ export const renderEditorStateToHtml = async (serializedState: string) => {
         },
     });
     editor.setEditorState(editor.parseEditorState(serializedState));
-
     let html = "";
+    html = await new Promise((resolve) => {
+        editor.update(() => {
+            resolve($generateHtmlFromNodes(editor));
+        });
+    });
+    // Post-process the HTML
+    try {
+        html = await postProcessHtml(html, true);
+    } catch (error) {
+        console.error("Error during post-processing:", error);
+        throw error;
+    }
 
-    editor.update(() => {
-        html = $generateHtmlFromNodes(editor);
-    })
-
-    html = await postProcessHtml(html, true);
     return html;
 };
