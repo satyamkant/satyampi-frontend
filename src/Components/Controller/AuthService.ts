@@ -2,8 +2,8 @@ import axios from 'axios'
 import { BlogType } from '../../DAO/BlogType';
 import { BlogDataDTO } from '../../DAO/BlogDataDTO';
 
-const API_BASE_URL = 'http://localhost:2000'; // Replace with your backend URL
-// const API_BASE_URL = 'https://blogsecurity.satyampi.uk';
+// const API_BASE_URL = 'http://localhost:2000'; // Replace with your backend URL
+const API_BASE_URL = 'https://blogsecurity.satyampi.uk';
 
 
 // Configure Axios instance
