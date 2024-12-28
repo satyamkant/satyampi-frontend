@@ -15,8 +15,8 @@ function BlogPage() {
     const blogData = async () => {
         try {
             const response = await AuthService.GetBlogByTitle("Welcome World !");
-            setBlog(<div dangerouslySetInnerHTML={{ __html: renderEditorStateToHtml(response.data.content) }} />);
-            console.log(response);
+            const blogHtml = await renderEditorStateToHtml(response.data.content)
+            setBlog(<div dangerouslySetInnerHTML={{ __html: blogHtml }} />);
         } catch (error) {
             console.log(error);
         } finally {
@@ -103,7 +103,7 @@ function BlogPage() {
                         <h3 className="pb-4 mb-4 border-bottom">
                             Straight from RaspberryPi !!! 😎
                         </h3>
-                        <article className="blog-post:">{blog}</article>
+                        <article className="blog-post">{blog}</article>
                     </div>)}
 
 

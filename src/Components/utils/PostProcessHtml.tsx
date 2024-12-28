@@ -1,23 +1,6 @@
 import { exportToSvg } from "@excalidraw/excalidraw";
 
-const removeStyleFromSvg_HACK = (svg: SVGElement) => {
-    const styleTag = svg?.firstElementChild?.firstElementChild;
-
-    // Generated SVG is getting double-sized by height and width attributes
-    // We want to match the real size of the SVG element
-    const viewBox = svg.getAttribute('viewBox');
-    if (viewBox != null) {
-        const viewBoxDimensions = viewBox.split(' ');
-        svg.setAttribute('width', viewBoxDimensions[2]);
-        svg.setAttribute('height', viewBoxDimensions[3]);
-    }
-
-    if (styleTag && styleTag.tagName === 'style') {
-        styleTag.remove();
-    }
-};
-
-function postProcessHtml (htmlString: string, processSvg: boolean) {
+async function postProcessHtml (htmlString: string, processSvg: boolean) {
     // Use DOMParser to parse the HTML string
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, "text/html");
@@ -65,6 +48,23 @@ function postProcessHtml (htmlString: string, processSvg: boolean) {
             'span[data-lexical-excalidraw-json]'
         ).forEach(async (span) => {
             const excalidrawData = span.getAttribute("data-lexical-excalidraw-json");
+            const removeStyleFromSvg_HACK = (svg: SVGElement) => {
+                const styleTag = svg?.firstElementChild?.firstElementChild;
+
+                // Generated SVG is getting double-sized by height and width attributes
+                // We want to match the real size of the SVG element
+                const viewBox = svg.getAttribute('viewBox');
+                if (viewBox != null) {
+                    const viewBoxDimensions = viewBox.split(' ');
+                    svg.setAttribute('width', viewBoxDimensions[2]);
+                    svg.setAttribute('height', viewBoxDimensions[3]);
+                }
+
+                if (styleTag && styleTag.tagName === 'style') {
+                    styleTag.remove();
+                }
+            };
+
             if (excalidrawData) {
                 try {
                     // Parse the Excalidraw JSON data
@@ -86,15 +86,16 @@ function postProcessHtml (htmlString: string, processSvg: boolean) {
 
                     span.appendChild(svg);
                     span.removeAttribute("data-lexical-excalidraw-json");
+                    console.log(svg)
                 } catch (error) {
                     console.error("Error processing Excalidraw JSON:", error);
                 }
             }
         });
     }
-
     // Serialize the modified DOM back to HTML
-    return doc.body.innerHTML;
+    const outputHtml = doc.body.innerHTML;
+    return outputHtml;
 }
 
 export default postProcessHtml;

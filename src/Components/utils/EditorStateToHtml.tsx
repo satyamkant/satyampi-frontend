@@ -4,7 +4,7 @@ import postProcessHtml from "./PostProcessHtml";
 import PlaygroundNodes from "../editor/nodes/PlaygroundNodes";
 import PlaygroundEditorTheme from "../editor/themes/PlaygroundEditorTheme";
 
-export const renderEditorStateToHtml = (serializedState: string) => {
+export const renderEditorStateToHtml = async (serializedState: string) => {
     // Create a temporary editor instance
     const editor = createEditor({
         namespace: "lexical-editor",
@@ -22,6 +22,6 @@ export const renderEditorStateToHtml = (serializedState: string) => {
         html = $generateHtmlFromNodes(editor);
     })
 
-    html = postProcessHtml(html,true);
+    html = await postProcessHtml(html, true);
     return html;
 };
