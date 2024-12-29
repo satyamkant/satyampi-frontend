@@ -20,13 +20,15 @@ function App() {
   }
   const checkAuthenticated = async () => {
     try {
-      const response = await AuthService.IsAuthenticatedService();
-      if (response.message === "Authenticated user") {
-        setIsAuthenticated(true);
-        setName(response.data.name);
-      } else {
-        setIsAuthenticated(false);
+      await AuthService.IsAuthenticatedService().then((response) => {
+        if (response.message === "Authenticated user") {
+          setIsAuthenticated(true);
+          setName(response.data.name);
+        } else {
+          setIsAuthenticated(false);
+        }
       }
+      );
     } catch (error) {
       console.log(error);
     } finally {
@@ -35,7 +37,7 @@ function App() {
   };
 
   useEffect(() => {
-    
+
     checkAuthenticated()
   }, [])
 
