@@ -1,11 +1,9 @@
 export interface LoginResponse {
     status: number;
     data: {
-        userDto: {
-            name: string;
-        };
-    };
-}
+        name: string;
+    }
+};
 
 export interface NavbarProps {
     isAuthenticated: boolean;

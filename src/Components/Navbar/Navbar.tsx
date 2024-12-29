@@ -13,7 +13,7 @@ function Navbar({ isAuthenticated, name, onAutheChange }: NavbarProps) {
 
     const handleLoginSuccess = (response: LoginResponse) => {
         if (response.status === 200) {
-            setUserName(response.data.userDto.name);
+            setUserName(response.data.name);
             onAutheChange();
         }
     }
