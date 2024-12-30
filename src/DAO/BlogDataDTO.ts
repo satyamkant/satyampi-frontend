@@ -1,4 +1,4 @@
-import { BlogType } from "./BlogType";
+import { BlogType } from "./Enums";
 
 // BlogDataDTO Interface
 export interface BlogDataDTO {

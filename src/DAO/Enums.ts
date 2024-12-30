@@ -13,3 +13,9 @@ export enum BlogType {
   INTRO = "INTRO",
   OTHERS = "OTHERS",
 }
+
+export enum UserRole {
+  AUTHOR = "AUTHOR",
+  READER = "READER",
+  ADMIN = "ADMIN"
+}

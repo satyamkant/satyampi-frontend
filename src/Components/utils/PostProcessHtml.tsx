@@ -85,6 +85,12 @@ async function postProcessHtml(htmlString: string, processSvg: boolean) {
 
                         span.appendChild(svg);
                         span.removeAttribute("data-lexical-excalidraw-json");
+
+                        // Add the 'd-flex' class to the immediate parent of the span
+                        const parent = span.parentElement;
+                        if (parent) {
+                            parent.classList.add('d-flex');
+                        }
                     } catch (error) {
                         console.error("Error processing Excalidraw JSON:", error);
                     }

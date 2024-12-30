@@ -9,10 +9,11 @@ import { LoginResponse, NavbarProps } from "../../DAO/schema";
 
 function Navbar({ isAuthenticated, name, onAutheChange }: NavbarProps) {
 
-    const [userName, setUserName] = useState(name);
+    const [userName, setUserName] = useState<string | null>(name);
 
     const handleLoginSuccess = (response: LoginResponse) => {
-        if (response.status === 200) {
+        console.log(response)
+        if (response.status === "200 OK") {
             setUserName(response.data.name);
             onAutheChange();
         }

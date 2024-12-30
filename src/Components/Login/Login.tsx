@@ -15,15 +15,15 @@ function Login({ onLoginSuccess }: LoginProps) {
 
     const handleSubmit = async (event: React.FormEvent<HTMLButtonElement>): Promise<void> => {
         event.preventDefault();
-        const response: LoginResponse = await AuthService.LoginService(email, password);
-
-        onLoginSuccess(response);
-        if (response.status === 200) {
-            const closeButton = document.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
-            if (closeButton) {
-                closeButton.click();
+        await AuthService.LoginService(email, password).then((response) => {
+            onLoginSuccess(response.data);
+            if (response.status === 200) {
+                const closeButton = document.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
+                if (closeButton) {
+                    closeButton.click();
+                }
             }
-        }
+        });
     };
 
 
