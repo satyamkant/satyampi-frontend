@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { BlogType } from '../../DAO/BlogType';
+import { BlogType } from '../../DAO/Enums';
 import { BlogDataDTO } from '../../DAO/BlogDataDTO';
 
 // const API_BASE_URL = 'http://localhost:2000'; // Replace with your backend URL
