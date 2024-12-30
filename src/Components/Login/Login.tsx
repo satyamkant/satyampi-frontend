@@ -12,18 +12,26 @@ function Login({ onLoginSuccess }: LoginProps) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setloading] = useState(false);
 
     const handleSubmit = async (event: React.FormEvent<HTMLButtonElement>): Promise<void> => {
-        event.preventDefault();
-        await AuthService.LoginService(email, password).then((response) => {
-            onLoginSuccess(response.data);
-            if (response.status === 200) {
-                const closeButton = document.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
-                if (closeButton) {
-                    closeButton.click();
+        try {
+            setloading(true);
+            event.preventDefault();
+            await AuthService.LoginService(email, password).then((response) => {
+                onLoginSuccess(response.data);
+                if (response.status === 200) {
+                    const closeButton = document.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
+                    if (closeButton) {
+                        closeButton.click();
+                    }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setloading(false);
+        }
     };
 
 
@@ -50,8 +58,19 @@ function Login({ onLoginSuccess }: LoginProps) {
                                     placeholder="Password" onChange={e => setPassword(e.target.value)} />
                                 <label htmlFor="floatingPassword">Password</label>
                             </div>
-                            <button className="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit" onClick={handleSubmit}>Sign In
-                            </button>
+                            {loading ? (
+                                <button className="w-100 mb-2 btn btn-lg  btn-primary" type="button" disabled={true}>
+                                    <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                    <span role="status">Loading...</span>
+                                </button>
+                            )
+                                :
+                                (
+                                    <button className="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit" onClick={handleSubmit}>Sign In
+                                    </button>
+
+                                )}
+
                             <small className="text-body-secondary">By clicking Sign in, you agree to the terms of
                                 use.</small>
                         </form>
