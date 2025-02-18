@@ -5,11 +5,12 @@ import BlogListPage from "./BlogListPage";
 
 function BlogHome() {
     const formatString = (input: string | undefined): string => {
-        return (input || '').trim().toUpperCase().replace(/\s+/g, '-');
+        return (input || '').trim().replace(/[\s-]+/g, '_').toUpperCase();
     };
 
     const { navLinkName } = useParams<{ navLinkName: string }>();
     const formattedString = formatString(navLinkName);
+    console.log(formattedString)
 
     return (
         <div className="blogHome">
