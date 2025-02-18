@@ -19,6 +19,7 @@ function Login({ onLoginSuccess }: LoginProps) {
             setloading(true);
             event.preventDefault();
             await AuthService.LoginService(email, password).then((response) => {
+                console.log(response);
                 onLoginSuccess(response.data);
                 if (response.status === 200) {
                     const closeButton = document.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
@@ -61,7 +62,7 @@ function Login({ onLoginSuccess }: LoginProps) {
                             {loading ? (
                                 <button className="w-100 mb-2 btn btn-lg  btn-primary" type="button" disabled={true}>
                                     <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                                    <span role="status">Loading...</span>
+                                    <span role="status" className="px-1">Loading...</span>
                                 </button>
                             )
                                 :

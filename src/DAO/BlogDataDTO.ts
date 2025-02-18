@@ -11,4 +11,5 @@ export interface BlogDataDTO {
   content: string; // Blog content
   imageUrls: string[] | null; // Array of image URLs
   publishedStatus: boolean; // Publication status
+  description: string; // Description of the blog
 }

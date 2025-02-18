@@ -1,23 +1,28 @@
-import { useParams } from "react-router-dom";
-import AuthService from "../Controller/AuthService";
 import "./css/BlogPage.scss"
 import { useEffect, useState } from "react";
 import LoadingScreen from "../LoadingScreen/LoadingScreen";
 import { renderEditorStateToHtml } from "../utils/EditorStateToHtml";
+import { BlogDataDTO } from "../../DAO/BlogDataDTO";
+import { useLocation } from "react-router-dom";
+import BlogNavbar from "./BlogNavbar";
 
 
 function BlogPage() {
-
-    const { navLinkName } = useParams<{ navLinkName: string }>();
     const [loading, setLoading] = useState(true);
-    const [blog, setBlog] = useState(<p>"No content found"</p>);
+    const [blog, setBlog] = useState(<></>);
+    const [title, setTitle] = useState("");
+
+    const location = useLocation();
+    const blogDataDto = location.state.blogDataDto;
 
     const blogData = async () => {
         try {
-            const response = await AuthService.GetBlogByTitle("Welcome World !");
-            const blogHtml = await renderEditorStateToHtml(response.data.content)
+            const blogHtml = await renderEditorStateToHtml(blogDataDto.content);
+            setTitle(blogDataDto.title);
             setBlog(<div dangerouslySetInnerHTML={{ __html: blogHtml }} />);
         } catch (error) {
+            setTitle("Error 404 Not Found!");
+            setBlog(<h5>Oops I think the backend is in trouble! 😭</h5>)
             console.log(error);
         } finally {
             setLoading(false);
@@ -29,9 +34,11 @@ function BlogPage() {
     }, [])
 
     return (
-        <main className="blog-page container">
+        <>
+            <BlogNavbar />
+            <main className="blog-page container">
 
-            {/* <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+                {/* <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
                 <div className="col-lg-6 px-0">
                     <h1 className="display-4 fst-italic">Development in Progress</h1>
                     <p className="lead my-3">This project is still in development.</p>
@@ -97,19 +104,19 @@ function BlogPage() {
                 </div>
             </div> */}
 
-            <div className="row g-5 py-5">
-                <div className="col-md-8">
-                    {loading ? (<LoadingScreen />) : (<div>
-                        <h3 className="pb-4 mb-4 border-bottom">
-                            Straight from RaspberryPi !!! 😎
-                        </h3>
-                        <article className="blog-post">{blog}</article>
-                    </div>)}
+                <div className="row g-5 py-5">
+                    <div className="col-md-8">
+                        {loading ? (<LoadingScreen />) : (<div>
+                            <h3 className="pb-4 mb-4 border-bottom">
+                                {title}
+                            </h3>
+                            <article className="blog-post">{blog}</article>
+                        </div>)}
 
 
 
 
-                    {/* <article className="blog-post">
+                        {/* <article className="blog-post">
                         <h2 className="display-5 link-body-emphasis mb-1">Sample blog post</h2>
                         <p className="blog-post-meta">January 1, 2021 by <a href="#">Mark</a></p>
 
@@ -278,96 +285,97 @@ function BlogPage() {
                         <a className="btn btn-outline-secondary rounded-pill disabled" aria-disabled="true">Newer</a>
                     </nav> */}
 
-                </div>
+                    </div>
 
-                <div className="col-md-4">
-                    <div className="position-sticky" style={{ "top": "2rem" }}>
-                        <div className="p-4 mb-3 bg-body-tertiary rounded">
-                            <h4 className="fst-italic">About</h4>
-                            <p className="mb-0">Customize this section to tell your visitors a little bit about your
-                                publication, writers, content, or something else entirely. Totally up to you.</p>
-                        </div>
+                    <div className="col-md-4">
+                        <div className="position-sticky" style={{ "top": "2rem" }}>
+                            <div className="p-4 mb-3 bg-body-tertiary rounded">
+                                <h4 className="fst-italic">About</h4>
+                                <p className="mb-0">Customize this section to tell your visitors a little bit about your
+                                    publication, writers, content, or something else entirely. Totally up to you.</p>
+                            </div>
 
-                        <div>
-                            <h4 className="fst-italic">Recent posts</h4>
-                            <ul className="list-unstyled">
-                                <li>
-                                    <a className="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
-                                        href="#">
-                                        <svg className="bd-placeholder-img" width="100%" height="96"
-                                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-                                            preserveAspectRatio="xMidYMid slice" focusable="false">
-                                            <rect width="100%" height="100%" fill="#777"></rect>
-                                        </svg>
-                                        <div className="col-lg-8">
-                                            <h6 className="mb-0">Example blog post title</h6>
-                                            <small className="text-body-secondary">January 15, 2024</small>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a className="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
-                                        href="#">
-                                        <svg className="bd-placeholder-img" width="100%" height="96"
-                                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-                                            preserveAspectRatio="xMidYMid slice" focusable="false">
-                                            <rect width="100%" height="100%" fill="#777"></rect>
-                                        </svg>
-                                        <div className="col-lg-8">
-                                            <h6 className="mb-0">This is another blog post title</h6>
-                                            <small className="text-body-secondary">January 14, 2024</small>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a className="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
-                                        href="#">
-                                        <svg className="bd-placeholder-img" width="100%" height="96"
-                                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-                                            preserveAspectRatio="xMidYMid slice" focusable="false">
-                                            <rect width="100%" height="100%" fill="#777"></rect>
-                                        </svg>
-                                        <div className="col-lg-8">
-                                            <h6 className="mb-0">Longer blog post title: This one has multiple
-                                                lines!</h6>
-                                            <small className="text-body-secondary">January 13, 2024</small>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                            <div>
+                                <h4 className="fst-italic">Recent posts</h4>
+                                <ul className="list-unstyled">
+                                    <li>
+                                        <a className="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
+                                            href="#">
+                                            <svg className="bd-placeholder-img" width="100%" height="96"
+                                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                                preserveAspectRatio="xMidYMid slice" focusable="false">
+                                                <rect width="100%" height="100%" fill="#777"></rect>
+                                            </svg>
+                                            <div className="col-lg-8">
+                                                <h6 className="mb-0">Example blog post title</h6>
+                                                <small className="text-body-secondary">January 15, 2024</small>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a className="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
+                                            href="#">
+                                            <svg className="bd-placeholder-img" width="100%" height="96"
+                                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                                preserveAspectRatio="xMidYMid slice" focusable="false">
+                                                <rect width="100%" height="100%" fill="#777"></rect>
+                                            </svg>
+                                            <div className="col-lg-8">
+                                                <h6 className="mb-0">This is another blog post title</h6>
+                                                <small className="text-body-secondary">January 14, 2024</small>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a className="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
+                                            href="#">
+                                            <svg className="bd-placeholder-img" width="100%" height="96"
+                                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                                preserveAspectRatio="xMidYMid slice" focusable="false">
+                                                <rect width="100%" height="100%" fill="#777"></rect>
+                                            </svg>
+                                            <div className="col-lg-8">
+                                                <h6 className="mb-0">Longer blog post title: This one has multiple
+                                                    lines!</h6>
+                                                <small className="text-body-secondary">January 13, 2024</small>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
 
-                        <div className="p-4">
-                            <h4 className="fst-italic">Archives</h4>
-                            <ol className="list-unstyled mb-0">
-                                <li><a href="#">March 2021</a></li>
-                                <li><a href="#">February 2021</a></li>
-                                <li><a href="#">January 2021</a></li>
-                                <li><a href="#">December 2020</a></li>
-                                <li><a href="#">November 2020</a></li>
-                                <li><a href="#">October 2020</a></li>
-                                <li><a href="#">September 2020</a></li>
-                                <li><a href="#">August 2020</a></li>
-                                <li><a href="#">July 2020</a></li>
-                                <li><a href="#">June 2020</a></li>
-                                <li><a href="#">May 2020</a></li>
-                                <li><a href="#">April 2020</a></li>
-                            </ol>
-                        </div>
+                            <div className="p-4">
+                                <h4 className="fst-italic">Archives</h4>
+                                <ol className="list-unstyled mb-0">
+                                    <li><a href="#">March 2021</a></li>
+                                    <li><a href="#">February 2021</a></li>
+                                    <li><a href="#">January 2021</a></li>
+                                    <li><a href="#">December 2020</a></li>
+                                    <li><a href="#">November 2020</a></li>
+                                    <li><a href="#">October 2020</a></li>
+                                    <li><a href="#">September 2020</a></li>
+                                    <li><a href="#">August 2020</a></li>
+                                    <li><a href="#">July 2020</a></li>
+                                    <li><a href="#">June 2020</a></li>
+                                    <li><a href="#">May 2020</a></li>
+                                    <li><a href="#">April 2020</a></li>
+                                </ol>
+                            </div>
 
-                        <div className="p-4">
-                            <h4 className="fst-italic">Elsewhere</h4>
-                            <ol className="list-unstyled">
-                                <li><a href="#">GitHub</a></li>
-                                <li><a href="#">Twitter</a></li>
-                                <li><a href="#">Facebook</a></li>
-                            </ol>
+                            <div className="p-4">
+                                <h4 className="fst-italic">Elsewhere</h4>
+                                <ol className="list-unstyled">
+                                    <li><a href="#">GitHub</a></li>
+                                    <li><a href="#">Twitter</a></li>
+                                    <li><a href="#">Facebook</a></li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-        </main>
+            </main>
+        </>
     )
 }
 

@@ -2,19 +2,20 @@ import logo from "../../Resources/Images/favicon.ico"
 import { Link, NavLink } from "react-router-dom";
 import "./Navbar.css"
 import Login from "../Login/Login";
-import { useState } from "react";
 import AuthService from "../Controller/AuthService";
 import '../../DAO/schema'
 import { LoginResponse, NavbarProps } from "../../DAO/schema";
+import { useAuth } from "../../DAO/AuthContext";
 
-function Navbar({ isAuthenticated, name, onAutheChange }: NavbarProps) {
+function Navbar({ isAuthenticated, onAutheChange }: NavbarProps) {
 
-    const [userName, setUserName] = useState<string | null>(name);
+    const { user, logout, setUser } = useAuth();
 
     const handleLoginSuccess = (response: LoginResponse) => {
         console.log(response)
         if (response.status === "200 OK") {
-            setUserName(response.data.name);
+            setUser(response.data);
+            localStorage.setItem("user", JSON.stringify(response.data));
             onAutheChange();
         }
     }
@@ -24,6 +25,7 @@ function Navbar({ isAuthenticated, name, onAutheChange }: NavbarProps) {
             console.log(response);
             if (response.message === "Successfully Logged out") {
                 alert("You have been logged out.");
+                logout();
                 window.location.href = "/";
             }
         })
@@ -61,11 +63,11 @@ function Navbar({ isAuthenticated, name, onAutheChange }: NavbarProps) {
                                         <li className="nav-item dropdown">
                                             <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown"
                                                 role="button" data-bs-toggle="dropdown"
-                                                aria-expanded="false"> Hi {userName}!
+                                                aria-expanded="false"> Hi {user?.name}!
                                             </a>
                                             <ul className="dropdown-menu dropdown-menu-end"
                                                 aria-labelledby="navbarDropdown">
-                                                <li><Link className="dropdown-item" to={`/${userName}/dashboard`}>Profile</Link></li>
+                                                <li><Link className="dropdown-item" to={`/${user?.name}/dashboard`}>Profile</Link></li>
                                                 <li><Link className="dropdown-item" to="#">Editor</Link></li>
                                                 <li>
                                                     <hr className="dropdown-divider" />

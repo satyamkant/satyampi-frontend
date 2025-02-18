@@ -1,9 +1,9 @@
 import { UserRole } from "./Enums";
 
 export interface LoginResponse {
-    error: string;
-    message: string;
-    status: string;
+    error: null | string;
+    message: null | string;
+    status: null | string;
     data: {
         accountLocked: null | boolean;
         bio: null | string;
@@ -18,13 +18,25 @@ export interface LoginResponse {
         passwordHash: null | string;
         profilePicturePath: null | string;
         role: null | UserRole;
-        updatedAt: null;
-        userId: null;
+        updatedAt: null | Date;
+        userId: null | number;
     }
 };
 
+export interface BlogDataDTO {
+    blogType: string;
+    title: string;
+    slug: string;
+    dateCreated: string;
+    dateUpdated: string;
+    authorId: number;
+    content: string; // Content is a JSON string, but you may want to parse it if necessary
+    imageUrls: string[];
+    publishedStatus: boolean;
+    description: string;
+}
+
 export interface NavbarProps {
     isAuthenticated: boolean;
-    name: string;
     onAutheChange: () => void;
 }

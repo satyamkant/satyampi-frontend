@@ -1,5 +1,5 @@
 import "./css/BlogNavbar.css"
-import {Link, NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function BlogNavbar() {
     const links = [

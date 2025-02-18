@@ -1,6 +1,5 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import Navbar from "./Components/Navbar/Navbar";
 import Footer from "./Components/Footer/Footer";
 import Home from "./Components/Home/Home";
 import BlogHome from "./Components/Blog/BlogHome";
@@ -8,12 +7,15 @@ import { useEffect, useState } from "react";
 import AuthService from "./Components/Controller/AuthService";
 import LoadingScreen from "./Components/LoadingScreen/LoadingScreen";
 import UserDashboard from "./Components/Dashboard/UserDashboard";
+import Navbar from './Components/Navbar/Navbar';
+import { useAuth } from './DAO/AuthContext';
+import BlogPage from './Components/Blog/BlogPage';
 
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [name, setName] = useState("");
+  const { logout } = useAuth();
 
   const toggleIsAuthenticated = () => {
     setIsAuthenticated(!isAuthenticated);
@@ -23,9 +25,9 @@ function App() {
       await AuthService.IsAuthenticatedService().then((response) => {
         if (response.message === "Authenticated user") {
           setIsAuthenticated(true);
-          setName(response.data.name);
         } else {
           setIsAuthenticated(false);
+          logout();
         }
       }
       );
@@ -37,7 +39,6 @@ function App() {
   };
 
   useEffect(() => {
-
     checkAuthenticated()
   }, [])
 
@@ -48,11 +49,12 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Navbar isAuthenticated={isAuthenticated} name={name} onAutheChange={toggleIsAuthenticated} />
+        <Navbar isAuthenticated={isAuthenticated} onAutheChange={toggleIsAuthenticated} />
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/home" element={<Home />} />
           <Route path="/blog/:navLinkName" element={<BlogHome />} />
+          <Route path="/blog/:navLinkName/:blogslug" element={<BlogPage />} />
           <Route
             path="/:usernameId/dashboard"
             element={isAuthenticated ? <UserDashboard /> : <Navigate to="/home" />}
