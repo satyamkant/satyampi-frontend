@@ -4,12 +4,12 @@ import { NavLink } from "react-router-dom";
 function BlogNavbar() {
     const links = [
         "intro",
-        "codeforces",
-        "codechef",
-        "leetcode",
-        "atcoder",
+        // "codeforces",
+        // "codechef",
+        // "leetcode",
+        // "atcoder",
         "graphs",
-        "trees",
+        // "trees",
         "advanced-data-structures",
         "gaming",
     ];
