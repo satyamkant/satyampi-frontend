@@ -2,6 +2,7 @@ import { BlogType } from "./Enums";
 
 // BlogDataDTO Interface
 export interface BlogDataDTO {
+  blogId?: number;
   blogType: BlogType; // Enum for blog type
   title: string; // Title of the blog
   slug: string; // Slug for the blog

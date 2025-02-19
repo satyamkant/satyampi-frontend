@@ -37,21 +37,28 @@ import { $generateHtmlFromNodes } from '@lexical/html';
 import postProcessHtml from '../utils/PostProcessHtml';
 import BlogService from '../Controller/BlogService';
 import { BlogType } from '../../DAO/Enums';
-import { useAuth } from '../../DAO/AuthContext';
-import { set } from 'lodash-es';
 
-export default function Editor() {
-    const { user } = useAuth();
+export interface EditorProps {
+    blogId: number;
+    blogTitle: string;
+    description: string;
+    blogType: string;
+    userId: number;
+    userName: string;
+    emailId: string;
+}
+
+export default function Editor(editorProps: EditorProps) {
 
     const placeholder = <Placeholder>{'Enter some rich text...'}</Placeholder>;
 
     const [editor] = useLexicalComposerContext();
     const [editorState, setEditorState] = useState("null");
     const [html, setHtml] = useState("");
-    const [blogTitle, setBlogTitle] = useState("");
-    const [description, setDescription] = useState("");
+    const [blogTitle, setBlogTitle] = useState(editorProps.blogTitle);
+    const [description, setDescription] = useState(editorProps.description);
     const [isContentEmpty, setIsContentEmpty] = useState(false);
-    const [blogType, setBlogType] = useState("CODEFORCES");
+    const [blogType, setBlogType] = useState(editorProps.blogType);
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -94,23 +101,36 @@ export default function Editor() {
         }
         else
             setIsContentEmpty(false);
-        setIsSubmitDisabled(true);
 
-        if (user?.userId == null) {
+        setIsSubmitDisabled(true);
+        if (editorProps.userId == null) {
             alert("User ID is missing please login again");
             setIsSubmitDisabled(false);
             return;
         }
 
-        BlogService.SubmitBlogService(user.userId, blogTitle, editorState, BlogType[blogType as keyof typeof BlogType], description).then((Response) => {
-            if (Response.status === "200 OK")
-                alert("Blog Submitted Successfully");
-            else
-                alert("Error in submitting blog Try again: " + Response.data);
+        if (editorProps.blogTitle === "") {
+            BlogService.SubmitBlogService(editorProps.userId, blogTitle, editorState, BlogType[blogType as keyof typeof BlogType], description).then((Response) => {
+                if (Response.status === "200 OK")
+                    alert("Blog Submitted Successfully");
+                else
+                    alert("Error in submitting blog Try again");
 
-        }).finally(() => {
-            setIsSubmitDisabled(false);
-        });
+            }).finally(() => {
+                setIsSubmitDisabled(false);
+            });
+        } else {
+            BlogService.UpdateBlogService(editorProps.blogId, blogTitle, editorState, BlogType[blogType as keyof typeof BlogType], description).then((Response) => {
+                if (Response.status === "200 OK")
+                    alert("Blog Updated Successfully");
+                else
+                    alert("Error in updating blog Try again");
+                console.log(Response);
+
+            }).finally(() => {
+                setIsSubmitDisabled(false);
+            });
+        }
     };
 
 
@@ -158,7 +178,7 @@ export default function Editor() {
                         <form className="row g-3 needs-validation" onSubmit={handleSubmit} noValidate>
                             <div className="col-md-4">
                                 <label htmlFor="validationCustom01" className="form-label"><b>Blog Title</b></label>
-                                <input type="text" className="form-control" id="validationCustom01" onChange={onChnageTitle} required />
+                                <input type="text" className="form-control" id="validationCustom01" onChange={onChnageTitle} value={blogTitle} disabled={editorProps.blogTitle !== ""} required />
                                 <div className="valid-feedback">
                                     Looks good!
                                 </div>
@@ -168,25 +188,25 @@ export default function Editor() {
                             </div>
                             <div className="col-md-4">
                                 <label htmlFor="validationCustom02" className="form-label"> <b>User Name</b></label>
-                                <input type="text" className="form-control" disabled={true} id="validationCustom02" value={user?.name ?? 'Error'} required />
+                                <input type="text" className="form-control" disabled={true} id="validationCustom02" value={editorProps.userName ?? 'Error'} required />
                             </div>
                             <div className="col-md-4">
                                 <label htmlFor="validationCustomUsername" className="form-label"><b>Email Id</b></label>
                                 <div className="input-group has-validation">
                                     <span className="input-group-text" id="inputGroupPrepend">@</span>
-                                    <input type="text" className="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" disabled={true} value={user?.email ?? 'Error'} required />
+                                    <input type="text" className="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" disabled={true} value={editorProps.emailId ?? 'Error'} required />
                                 </div>
                             </div>
                             <div className="col-md-8">
                                 <label htmlFor="validationCustom03" className="form-label"><b>Description</b></label>
-                                <textarea className="form-control" id="validationCustom03" rows={1} required onChange={onCHangeDescription} />
+                                <textarea className="form-control" id="validationCustom03" rows={1} required onChange={onCHangeDescription} value={description} />
                                 <div className="invalid-feedback">
                                     Please provide a valid description.
                                 </div>
                             </div>
                             <div className="col-md-4">
                                 <label htmlFor="validationCustom04" className="form-label"><b>Blog Type</b></label>
-                                <select className="form-select" id="validationCustom04" onChange={(e) => setBlogType(e.target.value)} required>
+                                <select className="form-select" id="validationCustom04" onChange={(e) => setBlogType(e.target.value)} value={blogType} required>
                                     {Object.values(BlogType).map((type) => (
                                         <option key={type} value={type}>
                                             {type.replace(/_/g, " ")}

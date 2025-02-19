@@ -7,12 +7,25 @@ import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 
 
 
-import Editor from "./editor";
+import Editor, { EditorProps } from "./editor";
 import { TableContext } from './plugins/TablePlugin';
+import { EditorState } from 'lexical';
 
-export default function MyEditor() {
+export interface MyEditorProps {
+    editorState: EditorState;
+    blogId: number;
+    blogTitle: string;
+    description: string;
+    blogType: string;
+    userId: number;
+    userName: string;
+    emailId: string;
+}
+
+
+export default function MyEditor(MyEditorProps: MyEditorProps) {
     const initialConfig = {
-        editorState: prepopulatedRichText,
+        editorState: MyEditorProps.editorState,
         namespace: "lexical-editor",
         nodes: [...PlaygroundNodes],
         theme: PlaygroundEditorTheme,
@@ -21,11 +34,21 @@ export default function MyEditor() {
         },
     }
 
+    const editorProps: EditorProps = {
+        blogId: MyEditorProps.blogId,
+        blogTitle: MyEditorProps.blogTitle,
+        description: MyEditorProps.description,
+        blogType:  MyEditorProps.blogType,
+        userId: MyEditorProps.userId,
+        userName: MyEditorProps.userName,
+        emailId: MyEditorProps.emailId,
+    }
+
     return (
         <div className="editor-shell">
             <LexicalComposer initialConfig={initialConfig}>
                 <TableContext>
-                    <Editor />
+                    <Editor {...editorProps} />
                 </TableContext>
             </LexicalComposer>
         </div>

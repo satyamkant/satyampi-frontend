@@ -55,6 +55,29 @@ const BlogService = {
         }
     },
 
+    UpdateBlogService: async (blogId: number, title: string, editorState: string, blogType: BlogType, description: string) => {
+        const blogDataDTO: BlogDataDTO = {
+            blogId: blogId,
+            blogType: blogType,
+            description: description,   
+            title: title,
+            slug: toSlug(title),
+            dateCreated: null,
+            dateUpdated: null,
+            authorId: 0,
+            content: editorState,
+            imageUrls: null,
+            publishedStatus: false
+        }
+
+        try {
+            const response = await axiosInstance.post(`/security/blog/updateblog`, blogDataDTO, {});
+            return response.data;
+        } catch (error: any) {
+            return error.response;
+        }
+    },
+
     GetBlogByTitle: async (title: string) => {
         try {
             const response = await axiosInstance.get(`/security/blog/getBlogByTitle/${title}`, {});
@@ -72,6 +95,15 @@ const BlogService = {
             return error.response;
         }
     },
+
+    GetAllBlogs: async () => {
+        try{
+            const response = await axiosInstance.get(`/security/blog/getAllBlogs`, {});
+            return response.data;
+        } catch (error: any) {
+            return error.response;
+        }
+    }
 }
 
 export default BlogService;
