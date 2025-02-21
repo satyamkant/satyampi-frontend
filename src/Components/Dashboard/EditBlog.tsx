@@ -35,8 +35,8 @@ function EditBlog() {
                                 <thead>
                                     <tr>
                                         <th scope="col">UserId</th>
-                                        <th scope="col">User Name</th>
                                         <th scope="col">User Email</th>
+                                        <th scope="col">Blog Type</th>
                                         <th scope="col">BLog Title</th>
                                         <th scope="col">Date Published</th>
                                         <th scope="col">Date Updated</th>
@@ -50,8 +50,8 @@ function EditBlog() {
                                             <tr key={blog.blogId} style={{ height: "50px" }}>
                                                 <td className="align-middle">{blog.authorId}</td>
                                                 <td className="align-middle">NULL</td>
-                                                <td className="align-middle">NULL</td>
-                                                <td className="align-middle">{blog.title}</td>
+                                                <td className="align-middle text-nowrap" style={{ maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis" }}>{blog.blogType}</td>
+                                                <td className="align-middle text-nowrap" style={{ maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis" }}>{blog.title}</td>
                                                 <td className="align-middle">{formatDate(blog.dateCreated)}</td>
                                                 <td className="align-middle">{formatDate(blog.dateUpdated)}</td>
                                                 <td className="align-middle"><button type="button" className="btn btn-warning" onClick={() => handleClick(blog)}>Edit</button></td>
