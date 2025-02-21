@@ -9,7 +9,7 @@ function BlogNavbar() {
         // "leetcode",
         // "atcoder",
         "graphs",
-        // "trees",
+        "trees",
         "advanced-data-structures",
         "gaming",
     ];
